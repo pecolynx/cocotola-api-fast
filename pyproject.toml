@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "cocotola-api-fast"
+version = "0.1.0"
+description = ""
+authors = ["pecolynx <pecolynx@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+fastapi = "^0.81.0"
+uvicorn = "^0.18.3"
+gunicorn = "^20.1.0"
+SQLAlchemy = "^1.4.40"
+dependency-injector = "^4.40.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+pyproject-flake8 = "^0.0.1-alpha.5"
+black = "^22.6.0"
+mypy = "^0.971"
+pytest-cov = "^3.0.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+start = "cocotola_api_fast.main:app --reload"
+
+[tool.taskipy.tasks]
+start = { cmd = "uvicorn cocotola_api_fast.main:app --reload", help = "launch test server" }
