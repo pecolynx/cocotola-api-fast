@@ -4,12 +4,7 @@ from sqlalchemy.orm import Session
 from domain.workbook import Workbook
 from gateway.database import Base
 from service.iworkbook_repository import IWorkbookRepository, WorkbookAddParameter
-
-
-class WorkbookNotFoundError(Exception):
-    def __init__(self, key: str, value: str):
-        self.key = key
-        self.value = value
+from service.iworkbook_repository import WorkbookNotFoundError
 
 
 class WorkbookDBEntity(Base):
@@ -17,9 +12,10 @@ class WorkbookDBEntity(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(Text, nullable=False)
+    lang2 = Column(Text, nullable=False)
 
     def to_model(self) -> Workbook:
-        return Workbook(name=self.name)
+        return Workbook(name=self.name, lang2=self.lang2)
 
 
 class WorkbookRepository(IWorkbookRepository):
@@ -30,11 +26,10 @@ class WorkbookRepository(IWorkbookRepository):
         # workbook = self.__session.query(WorkbookDBEntity).filter(WorkbookDBEntity.id == workbook_id).first()
         workbook_entity: WorkbookDBEntity = self.__session.query(WorkbookDBEntity) \
             .filter(WorkbookDBEntity.id == workbook_id).first()
-        # workbook = Workbook('hello')
         if workbook_entity is None:
             raise WorkbookNotFoundError('id', str(workbook_id))
         return workbook_entity.to_model()
 
     def add_workbook(self, workbook_add_param: WorkbookAddParameter) -> None:
-        workbook_entity: WorkbookDBEntity = WorkbookDBEntity(name=workbook_add_param.name)
+        workbook_entity = WorkbookDBEntity(name=workbook_add_param.name, lang2=workbook_add_param.lang2)
         self.__session.add(workbook_entity)

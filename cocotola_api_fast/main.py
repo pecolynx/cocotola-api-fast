@@ -1,10 +1,9 @@
 import logging
-import sys
 
 import uvicorn
 from fastapi import FastAPI
 
-from container import Container
+from config.container import Container
 from controller import translation_controller, workbook_controller
 from domain.workbook import Workbook
 from gateway.workbook_repository import WorkbookDBEntity
@@ -48,7 +47,7 @@ def create_app() -> FastAPI:
 
 app: FastAPI = create_app()
 
-workbook: Workbook = Workbook(name='test')
+workbook: Workbook = Workbook(name='test',lang2='ja')
 
 
 # workbook.name = 'hello'
