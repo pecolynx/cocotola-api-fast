@@ -2,6 +2,7 @@ import logging
 
 from domain.workbook import Workbook
 from service.iworkbook_repository import IWorkbookRepository
+from service.iworkbook_repository import WorkbookAddParameter
 
 logger = logging.getLogger(__name__)
 
@@ -19,3 +20,10 @@ class StudentUseCaseWorkbook(object):
             workbook: Workbook = workbook_repo.find_workbook_by_id(workbook_id)
             session.commit()
             return workbook
+
+    def add_workbook(self, operator_id: int, workbook_add_param: WorkbookAddParameter) -> None:
+        with self._session_factory() as session:
+            rf = self._repository_factory_func(session)
+            workbook_repo: IWorkbookRepository = rf.new_workbook_repository()
+            workbook_repo.add_workbook(workbook_add_param)
+            session.commit()

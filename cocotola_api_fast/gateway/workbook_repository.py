@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from domain.workbook import Workbook
 from gateway.database import Base
-from service.iworkbook_repository import IWorkbookRepository
+from service.iworkbook_repository import IWorkbookRepository, WorkbookAddParameter
 
 
 class WorkbookNotFoundError(Exception):
@@ -26,10 +26,6 @@ class WorkbookRepository(IWorkbookRepository):
     def __init__(self, session: Session):
         self.__session = session
 
-    def add_workbook(self, workbook: Workbook) -> None:
-        workbook_entity: WorkbookDBEntity = WorkbookDBEntity(name=workbook.name)
-        self.__session.add(workbook_entity)
-
     def find_workbook_by_id(self, workbook_id: int) -> Workbook:
         # workbook = self.__session.query(WorkbookDBEntity).filter(WorkbookDBEntity.id == workbook_id).first()
         workbook_entity: WorkbookDBEntity = self.__session.query(WorkbookDBEntity) \
@@ -38,3 +34,7 @@ class WorkbookRepository(IWorkbookRepository):
         if workbook_entity is None:
             raise WorkbookNotFoundError('id', str(workbook_id))
         return workbook_entity.to_model()
+
+    def add_workbook(self, workbook_add_param: WorkbookAddParameter) -> None:
+        workbook_entity: WorkbookDBEntity = WorkbookDBEntity(name=workbook_add_param.name)
+        self.__session.add(workbook_entity)
